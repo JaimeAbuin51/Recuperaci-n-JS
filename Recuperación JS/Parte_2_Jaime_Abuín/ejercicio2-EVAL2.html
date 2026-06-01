@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Búsqueda de Personas</title>
+  </head>
+  <body>
+    <h1 id="titulo"></h1>
+
+    <input id="buscar" type="text" placeholder="Busca un nombre" />
+    <p id="cargando"></p>
+    <div id="tarjeta"></div>
+
+    <button id="btn-aleatorios">Cargar datos aleatorios</button>
+    <div id="chiste"></div>
+    <div id="cita"></div>
+
+    <script>
+      let baseDatos = {
+        personas: [
+          {
+            id: 1,
+            nombre: "Carlos",
+            descripcion: "Ingeniero de software especializado en back-end.",
+          },
+          {
+            id: 2,
+            nombre: "Lucía",
+            descripcion:
+              "Diseñadora UI/UX con experiencia en productos móviles.",
+          },
+          {
+            id: 3,
+            nombre: "Ana",
+            descripcion: "Desarrolladora front-end con conocimientos en React.",
+          },
+          {
+            id: 4,
+            nombre: "Miguel",
+            descripcion:
+              "Administrador de sistemas con pasión por la seguridad.",
+          },
+        ],
+        citas: [
+          {
+            id: 1,
+            texto: "La programación es el arte de automatizar lo aburrido.",
+          },
+          {
+            id: 2,
+            texto:
+              "No se trata de lo que sabes, sino de lo que puedes descubrir.",
+          },
+          {
+            id: 3,
+            texto:
+              "Divide y vencerás: aplica siempre el principio de modularidad.",
+          },
+        ],
+      };
+
+      let titulo = document.getElementById("titulo");
+      let inputBuscar = document.getElementById("buscar");
+      let cargando = document.getElementById("cargando");
+      let tarjeta = document.getElementById("tarjeta");
+      let btnAleatorios = document.getElementById("btn-aleatorios");
+      let divChiste = document.getElementById("chiste");
+      let divCita = document.getElementById("cita");
+
+      setTimeout(function () {
+        titulo.textContent = "Bienvenido a la aplicación de búsqueda";
+      }, 2000);
+
+      inputBuscar.addEventListener("keypress", function (evento) {
+        if (evento.key === "Enter") {
+          let nombre = inputBuscar.value;
+          buscarPersona(nombre);
+        }
+      });
+
+      function buscarPersona(nombre) {
+        cargando.textContent = "Cargando...";
+        tarjeta.textContent = "";
+
+        setTimeout(function () {
+          let personas = baseDatos.personas;
+          let persona = personas.find(function (p) {
+            return p.nombre.toLowerCase() === nombre.toLowerCase();
+          });
+
+          if (persona) {
+            tarjeta.textContent = persona.nombre + ": " + persona.descripcion;
+            tarjeta.style.color = "black";
+          } else {
+            tarjeta.textContent = "Persona no encontrada";
+            tarjeta.style.color = "red";
+          }
+          cargando.textContent = "";
+        }, 2000);
+      }
+
+      btnAleatorios.addEventListener("click", function () {
+        Promise.all([
+          fetch("https://v2.jokeapi.dev/joke/Any?lang=es").then(function (r) {
+            return r.json();
+          }),
+          Promise.resolve(baseDatos.citas),
+        ])
+          .then(function (datos) {
+            let chiste = datos[0];
+            let citas = datos[1];
+            let citaAleatoria = citas[Math.floor(Math.random() * citas.length)];
+
+            divChiste.textContent = "Chiste: " + chiste.joke;
+            divCita.textContent = "Cita: " + citaAleatoria.texto;
+          })
+          .catch(function (error) {
+            divChiste.textContent = "Error";
+            divChiste.style.color = "red";
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "personas": [
+    {
+      "id": 1,
+      "nombre": "Carlos",
+      "descripcion": "Ingeniero de software especializado en back-end."
+    },
+    {
+      "id": 2,
+      "nombre": "Lucía",
+      "descripcion": "Diseñadora UI/UX con experiencia en productos móviles."
+    },
+    {
+      "id": 3,
+      "nombre": "Ana",
+      "descripcion": "Desarrolladora front-end con conocimientos en React."
+    },
+    {
+      "id": 4,
+      "nombre": "Miguel",
+      "descripcion": "Administrador de sistemas con pasión por la seguridad."
+    }
+  ],
+  "citas": [
+    {
+      "id": 1,
+      "texto": "La programación es el arte de automatizar lo aburrido."
+    },
+    {
+      "id": 2,
+      "texto": "No se trata de lo que sabes, sino de lo que puedes descubrir."
+    },
+    {
+      "id": 3,
+      "texto": "Divide y vencerás: aplica siempre el principio de modularidad."
+    }
+  ]
+}
