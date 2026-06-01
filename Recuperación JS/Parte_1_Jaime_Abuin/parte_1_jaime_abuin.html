@@ -22,6 +22,25 @@
     <button id="btn-inspeccion">Activar inspección</button>
     <p id="estado"></p>
 
-    <script src="parte_1_jaime_abuin.js"></script>
+    <script>
+      let frases = ["Hola", "Adiós", "Bienvenido"];
+
+      let btnFrase = document.getElementById("btn-frase");
+      let parrafoFrase = document.getElementById("frase");
+
+      function colorAleatorio() {
+        let r = Math.floor(Math.random() * 256);
+        let g = Math.floor(Math.random() * 256);
+        let b = Math.floor(Math.random() * 256);
+        return "rgb(" + r + "," + g + "," + b + ")";
+      }
+
+      btnFrase.addEventListener("click", function () {
+        let indice = Math.floor(Math.random() * frases.length);
+        parrafoFrase.textContent = frases[indice];
+        parrafoFrase.style.color = colorAleatorio();
+        btnFrase.style.color = colorAleatorio();
+      });
+    </script>
   </body>
 </html>
