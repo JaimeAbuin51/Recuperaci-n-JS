@@ -15,49 +15,6 @@
     <div id="cita"></div>
 
     <script>
-      let baseDatos = {
-        personas: [
-          {
-            id: 1,
-            nombre: "Carlos",
-            descripcion: "Ingeniero de software especializado en back-end.",
-          },
-          {
-            id: 2,
-            nombre: "Lucía",
-            descripcion:
-              "Diseñadora UI/UX con experiencia en productos móviles.",
-          },
-          {
-            id: 3,
-            nombre: "Ana",
-            descripcion: "Desarrolladora front-end con conocimientos en React.",
-          },
-          {
-            id: 4,
-            nombre: "Miguel",
-            descripcion:
-              "Administrador de sistemas con pasión por la seguridad.",
-          },
-        ],
-        citas: [
-          {
-            id: 1,
-            texto: "La programación es el arte de automatizar lo aburrido.",
-          },
-          {
-            id: 2,
-            texto:
-              "No se trata de lo que sabes, sino de lo que puedes descubrir.",
-          },
-          {
-            id: 3,
-            texto:
-              "Divide y vencerás: aplica siempre el principio de modularidad.",
-          },
-        ],
-      };
-
       let titulo = document.getElementById("titulo");
       let inputBuscar = document.getElementById("buscar");
       let cargando = document.getElementById("cargando");
@@ -82,19 +39,31 @@
         tarjeta.textContent = "";
 
         setTimeout(function () {
-          let personas = baseDatos.personas;
-          let persona = personas.find(function (p) {
-            return p.nombre.toLowerCase() === nombre.toLowerCase();
-          });
+          fetch("db.json")
+            .then(function (respuesta) {
+              return respuesta.json();
+            })
+            .then(function (datos) {
+              let personas = datos.personas;
+              let persona = personas.find(function (p) {
+                return p.nombre.toLowerCase() === nombre.toLowerCase();
+              });
 
-          if (persona) {
-            tarjeta.textContent = persona.nombre + ": " + persona.descripcion;
-            tarjeta.style.color = "black";
-          } else {
-            tarjeta.textContent = "Persona no encontrada";
-            tarjeta.style.color = "red";
-          }
-          cargando.textContent = "";
+              if (persona) {
+                tarjeta.textContent =
+                  persona.nombre + ": " + persona.descripcion;
+                tarjeta.style.color = "black";
+              } else {
+                tarjeta.textContent = "Persona no encontrada";
+                tarjeta.style.color = "red";
+              }
+              cargando.textContent = "";
+            })
+            .catch(function (error) {
+              tarjeta.textContent = "Error";
+              tarjeta.style.color = "red";
+              cargando.textContent = "";
+            });
         }, 2000);
       }
 
@@ -103,11 +72,13 @@
           fetch("https://v2.jokeapi.dev/joke/Any?lang=es").then(function (r) {
             return r.json();
           }),
-          Promise.resolve(baseDatos.citas),
+          fetch("db.json").then(function (r) {
+            return r.json();
+          }),
         ])
           .then(function (datos) {
             let chiste = datos[0];
-            let citas = datos[1];
+            let citas = datos[1].citas;
             let citaAleatoria = citas[Math.floor(Math.random() * citas.length)];
 
             divChiste.textContent = "Chiste: " + chiste.joke;
