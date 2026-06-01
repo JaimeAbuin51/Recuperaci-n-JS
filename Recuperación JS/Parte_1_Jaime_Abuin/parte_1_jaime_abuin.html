@@ -4,9 +4,10 @@
     <title>Panel de Aula</title>
   </head>
   <body>
-    <h1>Panel de Aula</h1>
+    <h1>Panel de Aula (DOM + BOM + Eventos)</h1>
 
     <h2>A) Frase aleatoria</h2>
+    <p>Pulsa el botón para cambiar la frase</p>
     <p id="frase"></p>
     <button id="btn-frase">Frase aleatoria</button>
 
@@ -16,31 +17,120 @@
     <button id="btn-vaciar">Vaciar lista</button>
     <ul id="lista"></ul>
 
-    <h2>C) Ayuda e inspección</h2>
+    <h2>C) Ayuda y modo inspección</h2>
     <button id="btn-ayuda">Abrir ayuda</button>
     <button id="btn-cerrar">Cerrar ayuda</button>
-    <button id="btn-inspeccion">Activar inspección</button>
-    <p id="estado"></p>
+    <button id="btn-inspeccion">Activar modo inspección</button>
+
+    <h3>Estado</h3>
+    <div id="estado"></div>
 
     <script>
-      let frases = ["Hola", "Adiós", "Bienvenido"];
+      let frases = [
+        "Hola",
+        "Adiós",
+        "Bienvenido",
+        "Recuperación JavaScript",
+        "Practica 1",
+        "Una vez termine empezaré con la segunda",
+      ];
 
       let btnFrase = document.getElementById("btn-frase");
       let parrafoFrase = document.getElementById("frase");
 
       function colorAleatorio() {
-        let r = Math.floor(Math.random() * 256);
-        let g = Math.floor(Math.random() * 256);
-        let b = Math.floor(Math.random() * 256);
-        return "rgb(" + r + "," + g + "," + b + ")";
+        let colores = ["red", "blue", "green", "purple", "orange", "brown"];
+        let indice = Math.floor(Math.random() * colores.length);
+        return colores[indice];
       }
 
       btnFrase.addEventListener("click", function () {
         let indice = Math.floor(Math.random() * frases.length);
         parrafoFrase.textContent = frases[indice];
         parrafoFrase.style.color = colorAleatorio();
-        btnFrase.style.color = colorAleatorio();
       });
+
+      let inputTarea = document.getElementById("input-tarea");
+      let btnAñadir = document.getElementById("btn-añadir");
+      let btnVaciar = document.getElementById("btn-vaciar");
+      let lista = document.getElementById("lista");
+
+      btnAñadir.addEventListener("click", function () {
+        let tarea = inputTarea.value;
+        if (tarea === "") {
+          alert("Escribe una tarea");
+          return;
+        }
+        let li = document.createElement("li");
+        let span = document.createElement("span");
+        span.textContent = tarea;
+        let btnCompletar = document.createElement("button");
+        btnCompletar.textContent = "✔";
+        btnCompletar.addEventListener("click", function () {
+          if (span.style.textDecoration === "line-through") {
+            span.style.textDecoration = "none";
+          } else {
+            span.style.textDecoration = "line-through";
+          }
+        });
+        let btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "🗑";
+        btnEliminar.addEventListener("click", function () {
+          li.remove();
+        });
+        li.appendChild(span);
+        li.appendChild(btnCompletar);
+        li.appendChild(btnEliminar);
+        lista.appendChild(li);
+        inputTarea.value = "";
+      });
+
+      btnVaciar.addEventListener("click", function () {
+        if (confirm("¿Vaciar la lista?")) {
+          lista.innerHTML = "";
+        }
+      });
+
+      let btnAyuda = document.getElementById("btn-ayuda");
+      let btnCerrar = document.getElementById("btn-cerrar");
+      let ventanaAyuda = null;
+
+      btnAyuda.addEventListener("click", function () {
+        ventanaAyuda = window.open("", "Ayuda", "width=500,height=300");
+        ventanaAyuda.document.write("<h1>Ayuda</h1>");
+        ventanaAyuda.document.write(
+          "<p>Frase: pulsa para ver frases aleatorias</p>",
+        );
+        ventanaAyuda.document.write(
+          "<p>Tareas: añade, marca o elimina tareas</p>",
+        );
+        ventanaAyuda.document.write(
+          "<p>Inspección: ve qué elemento está bajo el cursor</p>",
+        );
+      });
+
+      btnCerrar.addEventListener("click", function () {
+        if (ventanaAyuda) {
+          ventanaAyuda.close();
+        }
+      });
+
+      let btnInspeccion = document.getElementById("btn-inspeccion");
+      let estado = document.getElementById("estado");
+      let inspeccionActiva = false;
+
+      btnInspeccion.addEventListener("click", function () {
+        inspeccionActiva = !inspeccionActiva;
+        if (inspeccionActiva) {
+          document.addEventListener("mousemove", mostrarElemento);
+        } else {
+          document.removeEventListener("mousemove", mostrarElemento);
+        }
+      });
+
+      function mostrarElemento(evento) {
+        estado.textContent = "Elemento: " + evento.target.tagName;
+      }
     </script>
   </body>
 </html>
