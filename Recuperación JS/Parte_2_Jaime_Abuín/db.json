@@ -19,6 +19,11 @@
       "id": 4,
       "nombre": "Miguel",
       "descripcion": "Administrador de sistemas con pasión por la seguridad."
+    },
+    {
+      "id": 5,
+      "nombre": "Jaime",
+      "descripcion": "Alumno que necesita recuperar la asignatura."
     }
   ],
   "citas": [
